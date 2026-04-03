@@ -143,6 +143,67 @@
         font-size: 0.8rem;
         color: #aaa;
       }
+
+      #new-duration {
+        width: 70px;
+        padding: 10px 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        outline: none;
+        transition: border-color 0.15s;
+      }
+
+      #new-duration:focus { border-color: #555; }
+
+      #new-duration::-webkit-inner-spin-button,
+      #new-duration::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+      .timebox-badge {
+        font-size: 0.75rem;
+        color: #888;
+        background: #f0f0f0;
+        border-radius: 12px;
+        padding: 2px 8px;
+        white-space: nowrap;
+      }
+
+      .timebox-countdown {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #111;
+        font-variant-numeric: tabular-nums;
+        min-width: 44px;
+        text-align: right;
+      }
+
+      .timebox-countdown.urgent { color: #c00; }
+
+      .todo-item.timebox-active {
+        border-color: #111;
+        box-shadow: 0 0 0 2px rgba(0,0,0,0.06);
+      }
+
+      .todo-item button.timebox-start,
+      .todo-item button.timebox-pause,
+      .todo-item button.timebox-resume,
+      .todo-item button.timebox-stop {
+        background: none;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        padding: 3px 8px;
+        color: #555;
+        transition: all 0.15s;
+        white-space: nowrap;
+      }
+
+      .todo-item button.timebox-start:hover,
+      .todo-item button.timebox-resume:hover { border-color: #111; color: #111; }
+      .todo-item button.timebox-stop:hover { border-color: #e00; color: #e00; }
+      .todo-item button.timebox-pause:hover { border-color: #555; color: #333; }
+      .todo-item button.timebox-start:disabled { opacity: 0.35; cursor: not-allowed; }
     </style>
   </head>
   <body>
@@ -150,6 +211,7 @@
       <h1>Todo</h1>
       <div class="input-row">
         <input type="text" id="new-todo" placeholder="Add a task..." />
+        <input type="number" id="new-duration" placeholder="min" min="1" max="999" />
         <button class="add-btn" id="add-btn">Add</button>
       </div>
       <div class="filters">
