@@ -1,3 +1,5 @@
+import { formatTime, escapeHtml } from "./utils";
+
 type Filter = "all" | "active" | "done";
 
 interface Todo {
@@ -25,12 +27,6 @@ const filterBtns = document.querySelectorAll<HTMLButtonElement>(".filters button
 
 function save() {
   localStorage.setItem("todos", JSON.stringify(todos));
-}
-
-function formatTime(seconds: number): string {
-  const m = Math.floor(seconds / 60).toString().padStart(2, "0");
-  const s = (seconds % 60).toString().padStart(2, "0");
-  return `${m}:${s}`;
 }
 
 function clearTimerState() {
@@ -136,14 +132,6 @@ function render() {
 
   const remaining = todos.filter((t) => !t.done).length;
   footer.textContent = `${remaining} task${remaining !== 1 ? "s" : ""} remaining`;
-}
-
-function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
 }
 
 function addTodo() {
