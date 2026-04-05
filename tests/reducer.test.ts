@@ -93,3 +93,37 @@ describe("REORDER_TODO", () => {
     expect(result[1]).toEqual({ id: 1, text: "a", done: false, priority: "high" });
   });
 });
+
+describe("EDIT_NOTE", () => {
+  it("sets the note on a todo", () => {
+    const result = todosReducer(base, { type: "EDIT_NOTE", id: 1, note: "pick up 2 litres" });
+    expect(result.find(t => t.id === 1)?.note).toBe("pick up 2 litres");
+  });
+
+  it("trims whitespace from the note", () => {
+    const result = todosReducer(base, { type: "EDIT_NOTE", id: 1, note: "  trimmed  " });
+    expect(result.find(t => t.id === 1)?.note).toBe("trimmed");
+  });
+
+  it("removes the note when saved as empty string", () => {
+    const withNote: Todo[] = [{ id: 1, text: "buy milk", done: false, note: "existing" }];
+    const result = todosReducer(withNote, { type: "EDIT_NOTE", id: 1, note: "" });
+    expect(result.find(t => t.id === 1)?.note).toBeUndefined();
+  });
+
+  it("removes the note when saved as whitespace only", () => {
+    const withNote: Todo[] = [{ id: 1, text: "buy milk", done: false, note: "existing" }];
+    const result = todosReducer(withNote, { type: "EDIT_NOTE", id: 1, note: "   " });
+    expect(result.find(t => t.id === 1)?.note).toBeUndefined();
+  });
+
+  it("leaves other todos unchanged", () => {
+    const result = todosReducer(base, { type: "EDIT_NOTE", id: 1, note: "a note" });
+    expect(result.find(t => t.id === 2)?.note).toBeUndefined();
+  });
+
+  it("is a no-op for unknown id", () => {
+    const result = todosReducer(base, { type: "EDIT_NOTE", id: 99, note: "ghost" });
+    expect(result).toEqual(base);
+  });
+});
