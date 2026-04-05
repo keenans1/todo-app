@@ -326,6 +326,22 @@ button.add-btn:active { transform: scale(0.96); }
   color: var(--muted);
 }
 
+.todo-text[title] { cursor: text; }
+
+/* ── Inline edit input ── */
+.todo-edit-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-hi);
+  outline: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  color: var(--text);
+  padding: 0;
+  line-height: 1.4;
+}
+
 /* ── Recurrence badge ── */
 .recur-badge {
   font-size: 0.8rem;

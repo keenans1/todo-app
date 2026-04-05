@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Todo } from "../types";
 import { formatTime, formatDueDate } from "../utils";
 import TodoPanel from "./TodoPanel";
@@ -16,6 +17,7 @@ interface Props {
   onPauseTimer: () => void;
   onResumeTimer: (id: number) => void;
   onStopTimer: () => void;
+  onEdit: (id: number, text: string) => void;
   onToggleSubtask: (todoId: number, subtaskId: number, checked: boolean) => void;
 }
 
@@ -33,8 +35,11 @@ export default function TodoItem({
   onPauseTimer,
   onResumeTimer,
   onStopTimer,
+  onEdit,
   onToggleSubtask,
 }: Props) {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(todo.text);
   const todayStr = new Date().toISOString().slice(0, 10);
   const hasPanel = !!(todo.note || (todo.subtasks && todo.subtasks.length > 0));
 
@@ -55,7 +60,27 @@ export default function TodoItem({
           checked={todo.done}
           onChange={() => onToggleDone(todo.id)}
         />
-        <span className="todo-text">{todo.text}</span>
+        {editing ? (
+          <input
+            className="todo-edit-input"
+            value={draft}
+            autoFocus
+            onChange={(e) => setDraft(e.target.value)}
+            onBlur={() => { onEdit(todo.id, draft); setEditing(false); }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") { onEdit(todo.id, draft); setEditing(false); }
+              if (e.key === "Escape") { setDraft(todo.text); setEditing(false); }
+            }}
+          />
+        ) : (
+          <span
+            className="todo-text"
+            onClick={() => { if (!todo.done) { setDraft(todo.text); setEditing(true); } }}
+            title={todo.done ? undefined : "Click to edit"}
+          >
+            {todo.text}
+          </span>
+        )}
 
         {todo.recurrence && (
           <span className="recur-badge" title={`Repeats ${todo.recurrence}`}>↻</span>

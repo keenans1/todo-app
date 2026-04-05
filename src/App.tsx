@@ -13,7 +13,8 @@ type Action =
   | { type: "ADD_TODO"; payload: Omit<Todo, "id" | "done"> }
   | { type: "TOGGLE_DONE"; id: number }
   | { type: "DELETE_TODO"; id: number }
-  | { type: "TOGGLE_SUBTASK"; todoId: number; subtaskId: number; checked: boolean };
+  | { type: "TOGGLE_SUBTASK"; todoId: number; subtaskId: number; checked: boolean }
+  | { type: "EDIT_TODO"; id: number; text: string };
 
 function nextId(todos: Todo[]): number {
   return Math.max(0, ...todos.map((t) => t.id)) + 1;
@@ -68,6 +69,12 @@ function todosReducer(todos: Todo[], action: Action): Todo[] {
 
     case "DELETE_TODO":
       return todos.filter((t) => t.id !== action.id);
+
+    case "EDIT_TODO": {
+      const trimmed = action.text.trim();
+      if (!trimmed) return todos;
+      return todos.map((t) => t.id === action.id ? { ...t, text: trimmed } : t);
+    }
 
     case "TOGGLE_SUBTASK":
       return todos.map((t) => {
@@ -176,6 +183,7 @@ export default function App() {
         onPauseTimer={pauseTimer}
         onResumeTimer={() => resumeTimer()}
         onStopTimer={stopTimer}
+        onEdit={(id, text) => dispatch({ type: "EDIT_TODO", id, text })}
         onToggleSubtask={(todoId, subtaskId, checked) =>
           dispatch({ type: "TOGGLE_SUBTASK", todoId, subtaskId, checked })
         }
