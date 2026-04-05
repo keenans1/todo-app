@@ -20,9 +20,8 @@ body {
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  padding: 56px 20px 80px;
+  padding: 56px 5vw 80px;
+  overflow-x: hidden;
 }
 
 body::before {
@@ -37,8 +36,6 @@ body::before {
 .app {
   position: relative;
   z-index: 1;
-  width: 100%;
-  max-width: 560px;
 }
 
 /* ── Header ── */
@@ -170,6 +167,8 @@ button.add-btn:active { transform: scale(0.96); }
 .input-options select,
 .input-options input[type="date"],
 .input-options textarea {
+  min-width: 0;
+  max-width: 100%;
   background: var(--subtle);
   border: 1px solid var(--border);
   border-radius: 6px;
@@ -189,7 +188,7 @@ button.add-btn:active { transform: scale(0.96); }
   color: var(--text);
 }
 
-.input-options input[type="date"] { color-scheme: dark; }
+.input-options input[type="date"] { color-scheme: dark; width: auto; }
 
 .input-options textarea {
   flex: 1;
