@@ -15,6 +15,7 @@ interface Props {
   onPauseTimer: () => void;
   onResumeTimer: (id: number) => void;
   onStopTimer: () => void;
+  onEdit: (id: number, text: string) => void;
   onToggleSubtask: (todoId: number, subtaskId: number, checked: boolean) => void;
 }
 
@@ -32,6 +33,7 @@ export default function TodoList({
   onPauseTimer,
   onResumeTimer,
   onStopTimer,
+  onEdit,
   onToggleSubtask,
 }: Props) {
   const visible = todos.filter((t) =>
@@ -62,6 +64,7 @@ export default function TodoList({
               onPauseTimer={onPauseTimer}
               onResumeTimer={onResumeTimer}
               onStopTimer={onStopTimer}
+              onEdit={onEdit}
               onToggleSubtask={onToggleSubtask}
             />
           );
