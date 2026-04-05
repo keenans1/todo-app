@@ -1,4 +1,4 @@
-import { formatTime, escapeHtml } from "../src/utils";
+import { formatTime, escapeHtml, advanceDueDate } from "../src/utils";
 
 describe("formatTime", () => {
   it("formats zero seconds", () => {
@@ -43,5 +43,23 @@ describe("escapeHtml", () => {
     expect(escapeHtml('<a href="x&y">z</a>')).toBe(
       '&lt;a href=&quot;x&amp;y&quot;&gt;z&lt;/a&gt;'
     );
+  });
+});
+
+describe("advanceDueDate", () => {
+  it("advances a daily recurrence by 1 day", () => {
+    expect(advanceDueDate("2026-04-04", "daily")).toBe("2026-04-05");
+  });
+
+  it("advances a weekly recurrence by 7 days", () => {
+    expect(advanceDueDate("2026-04-04", "weekly")).toBe("2026-04-11");
+  });
+
+  it("rolls over month boundaries for daily", () => {
+    expect(advanceDueDate("2026-01-31", "daily")).toBe("2026-02-01");
+  });
+
+  it("rolls over year boundaries for weekly", () => {
+    expect(advanceDueDate("2025-12-29", "weekly")).toBe("2026-01-05");
   });
 });

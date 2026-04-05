@@ -35,13 +35,11 @@
         padding: 56px 20px 80px;
       }
 
-      /* subtle noise overlay */
       body::before {
         content: '';
         position: fixed;
         inset: 0;
-        background-image:
-          radial-gradient(ellipse 80% 60% at 50% -10%, rgba(240,180,41,0.05) 0%, transparent 60%);
+        background-image: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(240,180,41,0.05) 0%, transparent 60%);
         pointer-events: none;
         z-index: 0;
       }
@@ -50,7 +48,7 @@
         position: relative;
         z-index: 1;
         width: 100%;
-        max-width: 540px;
+        max-width: 560px;
       }
 
       /* ── Header ── */
@@ -72,7 +70,6 @@
 
       .date-label {
         font-size: 0.75rem;
-        font-weight: 400;
         color: var(--muted);
         letter-spacing: 0.08em;
         text-transform: uppercase;
@@ -82,18 +79,15 @@
       .input-row {
         display: flex;
         align-items: center;
-        gap: 0;
-        margin-bottom: 32px;
         background: var(--surface);
         border: 1px solid var(--border);
         border-radius: var(--radius);
         overflow: hidden;
         transition: border-color 0.2s;
+        margin-bottom: 0;
       }
 
-      .input-row:focus-within {
-        border-color: var(--border-hi);
-      }
+      .input-row:focus-within { border-color: var(--border-hi); }
 
       input[type="text"]#new-todo {
         flex: 1;
@@ -103,13 +97,10 @@
         outline: none;
         font-family: 'DM Sans', sans-serif;
         font-size: 0.95rem;
-        font-weight: 400;
         color: var(--text);
       }
 
-      input[type="text"]#new-todo::placeholder {
-        color: var(--muted);
-      }
+      input[type="text"]#new-todo::placeholder { color: var(--muted); }
 
       .divider {
         width: 1px;
@@ -119,8 +110,8 @@
       }
 
       #new-duration {
-        width: 72px;
-        padding: 14px 10px;
+        width: 62px;
+        padding: 14px 8px;
         background: transparent;
         border: none;
         outline: none;
@@ -131,17 +122,25 @@
         transition: color 0.15s;
       }
 
-      #new-duration:focus {
-        color: var(--text);
-      }
-
-      #new-duration::placeholder {
-        color: var(--muted);
-        opacity: 0.6;
-      }
-
+      #new-duration:focus { color: var(--text); }
+      #new-duration::placeholder { color: var(--muted); opacity: 0.6; }
       #new-duration::-webkit-inner-spin-button,
       #new-duration::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+      button.options-toggle {
+        background: none;
+        border: none;
+        padding: 14px 10px;
+        cursor: pointer;
+        font-size: 1rem;
+        color: var(--muted);
+        line-height: 1;
+        transition: color 0.15s;
+        flex-shrink: 0;
+      }
+
+      button.options-toggle:hover,
+      button.options-toggle.active { color: var(--accent); }
 
       button.add-btn {
         padding: 12px 18px;
@@ -160,10 +159,75 @@
       button.add-btn:hover { background: #f5c040; }
       button.add-btn:active { transform: scale(0.96); }
 
+      /* ── Options bar ── */
+      .input-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 10px 14px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-top: none;
+        border-radius: 0 0 var(--radius) var(--radius);
+        margin-bottom: 24px;
+      }
+
+      .input-options[hidden] { display: none; }
+
+      .input-row:has(+ .input-options:not([hidden])) {
+        border-radius: var(--radius) var(--radius) 0 0;
+      }
+
+      /* when options bar is hidden, restore margin on input-row */
+      .input-row { margin-bottom: 24px; }
+      .input-options:not([hidden]) { margin-bottom: 24px; }
+      .input-row:has(+ .input-options:not([hidden])) { margin-bottom: 0; }
+
+      .input-options select,
+      .input-options input[type="date"],
+      .input-options textarea {
+        background: var(--subtle);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--muted);
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.8rem;
+        padding: 6px 10px;
+        outline: none;
+        transition: border-color 0.15s, color 0.15s;
+        cursor: pointer;
+      }
+
+      .input-options select:focus,
+      .input-options input[type="date"]:focus,
+      .input-options textarea:focus {
+        border-color: var(--border-hi);
+        color: var(--text);
+      }
+
+      .input-options input[type="date"] { color-scheme: dark; }
+
+      .input-options textarea {
+        flex: 1;
+        min-width: 100%;
+        resize: vertical;
+        min-height: 56px;
+        cursor: text;
+        line-height: 1.4;
+      }
+
+      .options-label {
+        font-size: 0.7rem;
+        color: var(--muted);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        align-self: center;
+        flex-shrink: 0;
+      }
+
       /* ── Filters ── */
       .filters {
         display: flex;
-        gap: 0;
         margin-bottom: 8px;
         border-bottom: 1px solid var(--border);
       }
@@ -193,22 +257,16 @@
       }
 
       /* ── Todo list ── */
-      .todo-list {
-        list-style: none;
-        margin-top: 4px;
-      }
+      .todo-list { list-style: none; margin-top: 4px; }
 
       /* ── Todo item ── */
       .todo-item {
         display: flex;
-        align-items: center;
-        gap: 14px;
-        padding: 14px 4px 14px 16px;
+        flex-direction: column;
         border-bottom: 1px solid var(--border);
         border-left: 3px solid transparent;
         transition: border-left-color 0.2s, background 0.2s, opacity 0.2s;
         animation: fade-in 0.18s ease;
-        position: relative;
       }
 
       @keyframes fade-in {
@@ -216,21 +274,36 @@
         to   { opacity: 1; transform: translateY(0); }
       }
 
-      .todo-item:hover {
-        background: rgba(255,255,255,0.02);
-      }
-
-      .todo-item.done {
-        opacity: 0.45;
-      }
+      .todo-item:hover { background: rgba(255,255,255,0.02); }
+      .todo-item.done { opacity: 0.45; }
 
       .todo-item.timebox-active {
         border-left-color: var(--accent);
         background: var(--accent-lo);
       }
 
+      /* ── Todo row ── */
+      .todo-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 13px 4px 13px 14px;
+      }
+
+      /* ── Priority dot ── */
+      .priority-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .priority-dot.priority-high   { background: var(--danger); }
+      .priority-dot.priority-medium { background: var(--accent); }
+      .priority-dot.priority-low    { background: var(--green); }
+
       /* ── Custom checkbox ── */
-      .todo-item input[type="checkbox"] {
+      .todo-row input[type="checkbox"] {
         -webkit-appearance: none;
         appearance: none;
         width: 18px;
@@ -243,16 +316,14 @@
         transition: border-color 0.2s, background 0.2s;
       }
 
-      .todo-item input[type="checkbox"]:hover {
-        border-color: var(--green);
-      }
+      .todo-row input[type="checkbox"]:hover { border-color: var(--green); }
 
-      .todo-item input[type="checkbox"]:checked {
+      .todo-row input[type="checkbox"]:checked {
         background: var(--green);
         border-color: var(--green);
       }
 
-      .todo-item input[type="checkbox"]:checked::after {
+      .todo-row input[type="checkbox"]:checked::after {
         content: '';
         display: block;
         width: 4px;
@@ -267,26 +338,73 @@
       }
 
       /* ── Todo text ── */
-      .todo-item > span {
+      .todo-text {
         flex: 1;
         font-size: 0.95rem;
-        font-weight: 400;
         color: var(--text);
         line-height: 1.4;
         transition: color 0.2s;
       }
 
-      .todo-item.done > span {
+      .todo-item.done .todo-text {
         text-decoration: line-through;
         color: var(--muted);
       }
+
+      /* ── Recurrence badge ── */
+      .recur-badge {
+        font-size: 0.8rem;
+        color: var(--muted);
+        flex-shrink: 0;
+        cursor: default;
+      }
+
+      /* ── Due date label ── */
+      .due-label {
+        font-family: 'Space Mono', monospace;
+        font-size: 0.68rem;
+        color: var(--muted);
+        flex-shrink: 0;
+        letter-spacing: 0.02em;
+      }
+
+      .due-label.overdue {
+        color: var(--danger);
+        font-weight: 700;
+      }
+
+      /* ── Subtask count ── */
+      .subtask-count {
+        font-family: 'Space Mono', monospace;
+        font-size: 0.68rem;
+        color: var(--muted);
+        flex-shrink: 0;
+      }
+
+      .subtask-count.all-done { color: var(--green); }
+
+      /* ── Expand button ── */
+      .expand-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--muted);
+        font-size: 1rem;
+        padding: 2px 4px;
+        border-radius: 4px;
+        transition: color 0.15s, transform 0.2s;
+        flex-shrink: 0;
+        line-height: 1;
+      }
+
+      .expand-btn.expanded { transform: rotate(90deg); }
+      .expand-btn:hover { color: var(--text); }
 
       /* ── Timebox badge ── */
       .timebox-badge {
         font-family: 'Space Mono', monospace;
         font-size: 0.7rem;
         color: var(--muted);
-        letter-spacing: 0.02em;
         flex-shrink: 0;
       }
 
@@ -300,7 +418,6 @@
         min-width: 48px;
         text-align: right;
         flex-shrink: 0;
-        letter-spacing: 0.02em;
       }
 
       .timebox-countdown.urgent {
@@ -308,15 +425,13 @@
         animation: blink 1s step-start infinite;
       }
 
-      @keyframes blink {
-        50% { opacity: 0.4; }
-      }
+      @keyframes blink { 50% { opacity: 0.4; } }
 
       /* ── Timer buttons ── */
-      .todo-item button.timebox-start,
-      .todo-item button.timebox-pause,
-      .todo-item button.timebox-resume,
-      .todo-item button.timebox-stop {
+      .todo-row button.timebox-start,
+      .todo-row button.timebox-pause,
+      .todo-row button.timebox-resume,
+      .todo-row button.timebox-stop {
         background: none;
         border: 1px solid var(--border-hi);
         border-radius: 6px;
@@ -328,33 +443,18 @@
         transition: all 0.15s;
         white-space: nowrap;
         flex-shrink: 0;
-        letter-spacing: 0.04em;
         text-transform: uppercase;
+        letter-spacing: 0.04em;
       }
 
-      .todo-item button.timebox-start:hover,
-      .todo-item button.timebox-resume:hover {
-        border-color: var(--accent);
-        color: var(--accent);
-      }
-
-      .todo-item button.timebox-pause:hover {
-        border-color: var(--text);
-        color: var(--text);
-      }
-
-      .todo-item button.timebox-stop:hover {
-        border-color: var(--danger);
-        color: var(--danger);
-      }
-
-      .todo-item button.timebox-start:disabled {
-        opacity: 0.2;
-        cursor: not-allowed;
-      }
+      .todo-row button.timebox-start:hover,
+      .todo-row button.timebox-resume:hover { border-color: var(--accent); color: var(--accent); }
+      .todo-row button.timebox-pause:hover  { border-color: var(--text); color: var(--text); }
+      .todo-row button.timebox-stop:hover   { border-color: var(--danger); color: var(--danger); }
+      .todo-row button.timebox-start:disabled { opacity: 0.2; cursor: not-allowed; }
 
       /* ── Delete button ── */
-      .todo-item button.delete-btn {
+      .todo-row button.delete-btn {
         background: none;
         border: none;
         cursor: pointer;
@@ -367,12 +467,77 @@
         line-height: 1;
       }
 
-      .todo-item:hover button.delete-btn {
-        color: var(--muted);
+      .todo-item:hover .todo-row button.delete-btn { color: var(--muted); }
+      .todo-row button.delete-btn:hover { color: var(--danger) !important; }
+
+      /* ── Expansion panel ── */
+      .todo-panel {
+        padding: 10px 14px 14px 46px;
+        border-top: 1px solid var(--border);
+        animation: fade-in 0.15s ease;
       }
 
-      .todo-item button.delete-btn:hover {
-        color: var(--danger) !important;
+      .todo-note {
+        font-size: 0.85rem;
+        color: var(--muted);
+        line-height: 1.6;
+        white-space: pre-wrap;
+        margin-bottom: 10px;
+      }
+
+      .subtask-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .subtask-list li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.875rem;
+        color: var(--text);
+      }
+
+      /* Square subtask checkboxes */
+      .subtask-list input[type="checkbox"] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 14px;
+        height: 14px;
+        border: 1.5px solid var(--muted);
+        border-radius: 3px;
+        cursor: pointer;
+        flex-shrink: 0;
+        position: relative;
+        transition: border-color 0.2s, background 0.2s;
+      }
+
+      .subtask-list input[type="checkbox"]:hover { border-color: var(--green); }
+
+      .subtask-list input[type="checkbox"]:checked {
+        background: var(--green);
+        border-color: var(--green);
+      }
+
+      .subtask-list input[type="checkbox"]:checked::after {
+        content: '';
+        display: block;
+        width: 3px;
+        height: 6px;
+        border: 1.5px solid #0d0d0d;
+        border-top: none;
+        border-left: none;
+        position: absolute;
+        top: 1.5px;
+        left: 4px;
+        transform: rotate(45deg);
+      }
+
+      .subtask-done {
+        text-decoration: line-through;
+        color: var(--muted);
       }
 
       /* ── Empty state ── */
@@ -383,7 +548,6 @@
         font-size: 0.875rem;
         letter-spacing: 0.04em;
         border-bottom: 1px solid var(--border);
-        animation: fade-in 0.2s ease;
       }
 
       /* ── Footer ── */
@@ -407,7 +571,25 @@
         <input type="text" id="new-todo" placeholder="What needs to happen..." autocomplete="off" />
         <div class="divider"></div>
         <input type="number" id="new-duration" placeholder="min" min="1" max="999" />
+        <div class="divider"></div>
+        <button class="options-toggle" id="options-toggle" title="More options">⋯</button>
         <button class="add-btn" id="add-btn">+</button>
+      </div>
+
+      <div class="input-options" id="input-options" hidden>
+        <select id="new-priority">
+          <option value="">Priority</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
+        <input type="date" id="new-due-date" />
+        <select id="new-recurrence">
+          <option value="">No recurrence</option>
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+        </select>
+        <textarea id="new-note" placeholder="Add a note..."></textarea>
       </div>
 
       <div class="filters">
@@ -421,7 +603,6 @@
     </div>
 
     <script>
-      // Render today's date
       const d = new Date();
       document.getElementById('date-label').textContent =
         d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
