@@ -18,6 +18,7 @@ interface Props {
   onResumeTimer: (id: number) => void;
   onStopTimer: () => void;
   onEdit: (id: number, text: string) => void;
+  onEditNote: (id: number, note: string) => void;
   onToggleSubtask: (todoId: number, subtaskId: number, checked: boolean) => void;
   isDragging: boolean;
   isDragOver: boolean;
@@ -42,6 +43,7 @@ export default function TodoItem({
   onResumeTimer,
   onStopTimer,
   onEdit,
+  onEditNote,
   onToggleSubtask,
   isDragging,
   isDragOver,
@@ -53,7 +55,7 @@ export default function TodoItem({
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(todo.text);
   const todayStr = new Date().toISOString().slice(0, 10);
-  const hasPanel = !!(todo.note || (todo.subtasks && todo.subtasks.length > 0));
+  const hasPanel = true; // always expandable so notes can be added/edited
 
   const doneSubtasks = todo.subtasks?.filter((s) => s.done).length ?? 0;
   const totalSubtasks = todo.subtasks?.length ?? 0;
@@ -166,8 +168,8 @@ export default function TodoItem({
         <button className="delete-btn" onClick={() => onDelete(todo.id)} title="Delete">✕</button>
       </div>
 
-      {isExpanded && hasPanel && (
-        <TodoPanel todo={todo} onToggleSubtask={onToggleSubtask} />
+      {isExpanded && (
+        <TodoPanel todo={todo} onEditNote={onEditNote} onToggleSubtask={onToggleSubtask} />
       )}
     </li>
   );

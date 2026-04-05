@@ -1,14 +1,49 @@
+import { useState } from "react";
 import { Todo } from "../types";
 
 interface Props {
   todo: Todo;
+  onEditNote: (id: number, note: string) => void;
   onToggleSubtask: (todoId: number, subtaskId: number, checked: boolean) => void;
 }
 
-export default function TodoPanel({ todo, onToggleSubtask }: Props) {
+export default function TodoPanel({ todo, onEditNote, onToggleSubtask }: Props) {
+  const [editingNote, setEditingNote] = useState(false);
+  const [noteDraft, setNoteDraft] = useState(todo.note ?? "");
+
+  function saveNote() {
+    onEditNote(todo.id, noteDraft);
+    setEditingNote(false);
+  }
+
+  function cancelNote() {
+    setNoteDraft(todo.note ?? "");
+    setEditingNote(false);
+  }
+
   return (
     <div className="todo-panel">
-      {todo.note && <p className="todo-note">{todo.note}</p>}
+      {editingNote ? (
+        <textarea
+          className="note-edit-input"
+          value={noteDraft}
+          autoFocus
+          onChange={(e) => setNoteDraft(e.target.value)}
+          onBlur={saveNote}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") { e.preventDefault(); cancelNote(); }
+          }}
+        />
+      ) : (
+        <p
+          className={`todo-note${todo.note ? "" : " todo-note-empty"}`}
+          onClick={() => { setNoteDraft(todo.note ?? ""); setEditingNote(true); }}
+          title="Click to edit note"
+        >
+          {todo.note ?? "Add a note…"}
+        </p>
+      )}
+
       {todo.subtasks && todo.subtasks.length > 0 && (
         <ul className="subtask-list">
           {todo.subtasks.map((s) => (

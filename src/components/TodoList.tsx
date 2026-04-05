@@ -18,6 +18,7 @@ interface Props {
   onStopTimer: () => void;
   onReorder: (draggedId: number, targetId: number) => void;
   onEdit: (id: number, text: string) => void;
+  onEditNote: (id: number, note: string) => void;
   onToggleSubtask: (todoId: number, subtaskId: number, checked: boolean) => void;
 }
 
@@ -37,6 +38,7 @@ export default function TodoList({
   onStopTimer,
   onReorder,
   onEdit,
+  onEditNote,
   onToggleSubtask,
 }: Props) {
   const [draggedId, setDraggedId] = useState<number | null>(null);
@@ -73,6 +75,7 @@ export default function TodoList({
               onResumeTimer={onResumeTimer}
               onStopTimer={onStopTimer}
               onEdit={onEdit}
+              onEditNote={onEditNote}
               onToggleSubtask={onToggleSubtask}
               onDragStart={() => setDraggedId(todo.id)}
               onDragOver={(e) => { e.preventDefault(); setOverId(todo.id); }}

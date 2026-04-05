@@ -7,7 +7,8 @@ export type Action =
   | { type: "DELETE_TODO"; id: number }
   | { type: "TOGGLE_SUBTASK"; todoId: number; subtaskId: number; checked: boolean }
   | { type: "EDIT_TODO"; id: number; text: string }
-  | { type: "REORDER_TODO"; draggedId: number; targetId: number };
+  | { type: "REORDER_TODO"; draggedId: number; targetId: number }
+  | { type: "EDIT_NOTE"; id: number; note: string };
 
 export function nextId(todos: Todo[]): number {
   return Math.max(0, ...todos.map((t) => t.id)) + 1;
@@ -86,6 +87,11 @@ export function todosReducer(todos: Todo[], action: Action): Todo[] {
       const [moved] = result.splice(from, 1);
       result.splice(to, 0, moved);
       return result;
+    }
+
+    case "EDIT_NOTE": {
+      const note = action.note.trim() || undefined;
+      return todos.map((t) => t.id === action.id ? { ...t, note } : t);
     }
 
     default:
