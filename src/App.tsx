@@ -98,6 +98,9 @@ export default function App() {
         onPauseTimer={pauseTimer}
         onResumeTimer={() => resumeTimer()}
         onStopTimer={stopTimer}
+        onReorder={(draggedId, targetId) =>
+          dispatch({ type: "REORDER_TODO", draggedId, targetId })
+        }
         onEdit={(id, text) => dispatch({ type: "EDIT_TODO", id, text })}
         onToggleSubtask={(todoId, subtaskId, checked) =>
           dispatch({ type: "TOGGLE_SUBTASK", todoId, subtaskId, checked })

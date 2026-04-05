@@ -19,6 +19,12 @@ interface Props {
   onStopTimer: () => void;
   onEdit: (id: number, text: string) => void;
   onToggleSubtask: (todoId: number, subtaskId: number, checked: boolean) => void;
+  isDragging: boolean;
+  isDragOver: boolean;
+  onDragStart: () => void;
+  onDragOver: (e: React.DragEvent) => void;
+  onDrop: () => void;
+  onDragEnd: () => void;
 }
 
 export default function TodoItem({
@@ -37,6 +43,12 @@ export default function TodoItem({
   onStopTimer,
   onEdit,
   onToggleSubtask,
+  isDragging,
+  isDragOver,
+  onDragStart,
+  onDragOver,
+  onDrop,
+  onDragEnd,
 }: Props) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(todo.text);
@@ -46,9 +58,25 @@ export default function TodoItem({
   const doneSubtasks = todo.subtasks?.filter((s) => s.done).length ?? 0;
   const totalSubtasks = todo.subtasks?.length ?? 0;
 
+  const classes = [
+    "todo-item",
+    todo.done    ? "done"           : "",
+    isActive     ? "timebox-active" : "",
+    isDragging   ? "dragging"       : "",
+    isDragOver   ? "drag-over"      : "",
+  ].filter(Boolean).join(" ");
+
   return (
-    <li className={`todo-item${todo.done ? " done" : ""}${isActive ? " timebox-active" : ""}`}>
+    <li
+      className={classes}
+      draggable
+      onDragStart={onDragStart}
+      onDragOver={onDragOver}
+      onDrop={onDrop}
+      onDragEnd={onDragEnd}
+    >
       <div className="todo-row">
+        <span className="drag-handle" aria-hidden="true">⠿</span>
         {todo.priority && (
           <span
             className={`priority-dot priority-${todo.priority}`}

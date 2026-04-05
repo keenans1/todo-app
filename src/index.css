@@ -257,6 +257,9 @@ button.add-btn:active { transform: scale(0.96); }
   background: var(--accent-lo);
 }
 
+.todo-item.dragging { opacity: 0.35; }
+.todo-item.drag-over { border-top: 2px solid var(--accent); }
+
 /* ── Todo row ── */
 .todo-row {
   display: flex;
@@ -264,6 +267,20 @@ button.add-btn:active { transform: scale(0.96); }
   gap: 12px;
   padding: 13px 4px 13px 14px;
 }
+
+/* ── Drag handle ── */
+.drag-handle {
+  color: transparent;
+  cursor: grab;
+  font-size: 1rem;
+  flex-shrink: 0;
+  transition: color 0.15s;
+  user-select: none;
+  line-height: 1;
+}
+
+.todo-item:hover .drag-handle { color: var(--muted); }
+.todo-item.dragging .drag-handle { cursor: grabbing; }
 
 /* ── Priority dot ── */
 .priority-dot {
