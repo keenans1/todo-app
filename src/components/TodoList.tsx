@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Todo, Filter } from "../types";
 import TodoItem from "./TodoItem";
 
@@ -15,6 +16,7 @@ interface Props {
   onPauseTimer: () => void;
   onResumeTimer: (id: number) => void;
   onStopTimer: () => void;
+  onReorder: (draggedId: number, targetId: number) => void;
   onEdit: (id: number, text: string) => void;
   onToggleSubtask: (todoId: number, subtaskId: number, checked: boolean) => void;
 }
@@ -33,9 +35,13 @@ export default function TodoList({
   onPauseTimer,
   onResumeTimer,
   onStopTimer,
+  onReorder,
   onEdit,
   onToggleSubtask,
 }: Props) {
+  const [draggedId, setDraggedId] = useState<number | null>(null);
+  const [overId, setOverId] = useState<number | null>(null);
+
   const visible = todos.filter((t) =>
     filter === "all" ? true : filter === "done" ? t.done : !t.done
   );
@@ -57,6 +63,8 @@ export default function TodoList({
               remainingSeconds={isActive ? remainingSeconds : 0}
               isExpanded={expandedIds.has(todo.id)}
               otherTimerActive={otherTimerActive}
+              isDragging={draggedId === todo.id}
+              isDragOver={overId === todo.id && draggedId !== todo.id}
               onToggleDone={onToggleDone}
               onDelete={onDelete}
               onToggleExpand={onToggleExpand}
@@ -66,6 +74,16 @@ export default function TodoList({
               onStopTimer={onStopTimer}
               onEdit={onEdit}
               onToggleSubtask={onToggleSubtask}
+              onDragStart={() => setDraggedId(todo.id)}
+              onDragOver={(e) => { e.preventDefault(); setOverId(todo.id); }}
+              onDrop={() => {
+                if (draggedId !== null && draggedId !== todo.id) {
+                  onReorder(draggedId, todo.id);
+                }
+                setDraggedId(null);
+                setOverId(null);
+              }}
+              onDragEnd={() => { setDraggedId(null); setOverId(null); }}
             />
           );
         })

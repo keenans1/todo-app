@@ -50,3 +50,46 @@ describe("EDIT_TODO", () => {
     expect(edited.done).toBe(false);
   });
 });
+
+const list: Todo[] = [
+  { id: 1, text: "alpha", done: false },
+  { id: 2, text: "beta",  done: false },
+  { id: 3, text: "gamma", done: false },
+];
+
+describe("REORDER_TODO", () => {
+  it("moves an item earlier in the list", () => {
+    const result = todosReducer(list, { type: "REORDER_TODO", draggedId: 3, targetId: 1 });
+    expect(result.map(t => t.id)).toEqual([3, 1, 2]);
+  });
+
+  it("moves an item later in the list", () => {
+    const result = todosReducer(list, { type: "REORDER_TODO", draggedId: 1, targetId: 3 });
+    expect(result.map(t => t.id)).toEqual([2, 3, 1]);
+  });
+
+  it("is a no-op when dragged and target are the same", () => {
+    const result = todosReducer(list, { type: "REORDER_TODO", draggedId: 2, targetId: 2 });
+    expect(result).toEqual(list);
+  });
+
+  it("is a no-op when draggedId does not exist", () => {
+    const result = todosReducer(list, { type: "REORDER_TODO", draggedId: 99, targetId: 1 });
+    expect(result).toEqual(list);
+  });
+
+  it("is a no-op when targetId does not exist", () => {
+    const result = todosReducer(list, { type: "REORDER_TODO", draggedId: 1, targetId: 99 });
+    expect(result).toEqual(list);
+  });
+
+  it("preserves all fields on reordered todos", () => {
+    const withExtras: Todo[] = [
+      { id: 1, text: "a", done: false, priority: "high" },
+      { id: 2, text: "b", done: true,  priority: "low"  },
+    ];
+    const result = todosReducer(withExtras, { type: "REORDER_TODO", draggedId: 2, targetId: 1 });
+    expect(result[0]).toEqual({ id: 2, text: "b", done: true, priority: "low" });
+    expect(result[1]).toEqual({ id: 1, text: "a", done: false, priority: "high" });
+  });
+});
