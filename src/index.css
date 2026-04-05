@@ -491,6 +491,28 @@ button.add-btn:active { transform: scale(0.96); }
   line-height: 1.6;
   white-space: pre-wrap;
   margin-bottom: 10px;
+  cursor: text;
+}
+
+.todo-note-empty {
+  color: var(--border-hi);
+  font-style: italic;
+}
+
+.note-edit-input {
+  width: 100%;
+  min-height: 64px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-hi);
+  outline: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  color: var(--text);
+  line-height: 1.6;
+  resize: vertical;
+  padding: 0;
+  margin-bottom: 10px;
 }
 
 .subtask-list {

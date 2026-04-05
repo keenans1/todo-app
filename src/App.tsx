@@ -102,6 +102,7 @@ export default function App() {
           dispatch({ type: "REORDER_TODO", draggedId, targetId })
         }
         onEdit={(id, text) => dispatch({ type: "EDIT_TODO", id, text })}
+        onEditNote={(id, note) => dispatch({ type: "EDIT_NOTE", id, note })}
         onToggleSubtask={(todoId, subtaskId, checked) =>
           dispatch({ type: "TOGGLE_SUBTASK", todoId, subtaskId, checked })
         }
