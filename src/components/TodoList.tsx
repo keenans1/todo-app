@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Todo, Filter } from "../types";
+import { Todo, Filter, Goal } from "../types";
 import TodoItem from "./TodoItem";
 
 interface Props {
@@ -20,6 +20,8 @@ interface Props {
   onEdit: (id: number, text: string) => void;
   onEditNote: (id: number, note: string) => void;
   onToggleSubtask: (todoId: number, subtaskId: number, checked: boolean) => void;
+  onSetGoalLink: (id: number, goalId: number | undefined) => void;
+  goals: Goal[];
 }
 
 export default function TodoList({
@@ -40,6 +42,8 @@ export default function TodoList({
   onEdit,
   onEditNote,
   onToggleSubtask,
+  onSetGoalLink,
+  goals,
 }: Props) {
   const [draggedId, setDraggedId] = useState<number | null>(null);
   const [overId, setOverId] = useState<number | null>(null);
@@ -77,6 +81,8 @@ export default function TodoList({
               onEdit={onEdit}
               onEditNote={onEditNote}
               onToggleSubtask={onToggleSubtask}
+              onSetGoalLink={onSetGoalLink}
+              goals={goals}
               onDragStart={() => setDraggedId(todo.id)}
               onDragOver={(e) => { e.preventDefault(); setOverId(todo.id); }}
               onDrop={() => {

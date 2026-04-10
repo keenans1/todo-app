@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Todo } from "../types";
+import { Todo, Goal } from "../types";
 import { formatTime, formatDueDate } from "../utils";
 import TodoPanel from "./TodoPanel";
 
@@ -20,6 +20,8 @@ interface Props {
   onEdit: (id: number, text: string) => void;
   onEditNote: (id: number, note: string) => void;
   onToggleSubtask: (todoId: number, subtaskId: number, checked: boolean) => void;
+  onSetGoalLink: (id: number, goalId: number | undefined) => void;
+  goals: Goal[];
   isDragging: boolean;
   isDragOver: boolean;
   onDragStart: () => void;
@@ -45,6 +47,8 @@ export default function TodoItem({
   onEdit,
   onEditNote,
   onToggleSubtask,
+  onSetGoalLink,
+  goals,
   isDragging,
   isDragOver,
   onDragStart,
@@ -169,7 +173,7 @@ export default function TodoItem({
       </div>
 
       {isExpanded && (
-        <TodoPanel todo={todo} onEditNote={onEditNote} onToggleSubtask={onToggleSubtask} />
+        <TodoPanel todo={todo} goals={goals} onEditNote={onEditNote} onToggleSubtask={onToggleSubtask} onSetGoalLink={onSetGoalLink} />
       )}
     </li>
   );

@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Todo, Priority, Recurrence } from "../types";
+import { Todo, Priority, Recurrence, Goal } from "../types";
 
 interface Props {
+  goals: Goal[];
   onAdd: (todo: Omit<Todo, "id" | "done">) => void;
 }
 
-export default function AddTodoForm({ onAdd }: Props) {
+export default function AddTodoForm({ goals, onAdd }: Props) {
   const [text, setText] = useState("");
   const [duration, setDuration] = useState("");
   const [optionsOpen, setOptionsOpen] = useState(false);
@@ -13,6 +14,7 @@ export default function AddTodoForm({ onAdd }: Props) {
   const [dueDate, setDueDate] = useState("");
   const [recurrence, setRecurrence] = useState<Recurrence | "">("");
   const [note, setNote] = useState("");
+  const [goalId, setGoalId] = useState<number | "">("");
 
   function submit() {
     const trimmed = text.trim();
@@ -26,6 +28,7 @@ export default function AddTodoForm({ onAdd }: Props) {
       dueDate: dueDate || undefined,
       recurrence: (recurrence as Recurrence) || undefined,
       note: note.trim() || undefined,
+      goalId: (goalId as number) || undefined,
     });
 
     setText("");
@@ -34,6 +37,7 @@ export default function AddTodoForm({ onAdd }: Props) {
     setDueDate("");
     setRecurrence("");
     setNote("");
+    setGoalId("");
   }
 
   return (
@@ -69,6 +73,12 @@ export default function AddTodoForm({ onAdd }: Props) {
 
       {optionsOpen && (
         <div className="input-options">
+          <select value={goalId} onChange={(e) => setGoalId(e.target.value === "" ? "" : Number(e.target.value))}>
+            <option value="">No goal</option>
+            {goals.map((g) => (
+              <option key={g.id} value={g.id}>{g.title}</option>
+            ))}
+          </select>
           <select value={priority} onChange={(e) => setPriority(e.target.value as Priority | "")}>
             <option value="">Priority</option>
             <option value="high">High</option>
