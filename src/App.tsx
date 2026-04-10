@@ -1,11 +1,13 @@
 import { useReducer, useState, useEffect } from "react";
-import { Todo, Filter } from "./types";
+import { Todo, Filter, Goal } from "./types";
 import { todosReducer } from "./reducer";
+import { goalsReducer } from "./goalsReducer";
 import { useTimer } from "./hooks/useTimer";
 import Header from "./components/Header";
 import AddTodoForm from "./components/AddTodoForm";
 import FilterBar from "./components/FilterBar";
 import TodoList from "./components/TodoList";
+import GoalsSection from "./components/GoalsSection";
 
 // ── App ───────────────────────────────────────────────────────────────────────
 
@@ -17,8 +19,17 @@ function loadTodos(): Todo[] {
   }
 }
 
+function loadGoals(): Goal[] {
+  try {
+    return JSON.parse(localStorage.getItem("goals") ?? "[]");
+  } catch {
+    return [];
+  }
+}
+
 export default function App() {
   const [todos, dispatch] = useReducer(todosReducer, undefined, loadTodos);
+  const [goals, goalsDispatch] = useReducer(goalsReducer, undefined, loadGoals);
   const [filter, setFilter] = useState<Filter>("all");
   const [expandedIds, setExpandedIds] = useState<Set<number>>(new Set());
 
@@ -38,6 +49,11 @@ export default function App() {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
 
+  // Persist goals to localStorage
+  useEffect(() => {
+    localStorage.setItem("goals", JSON.stringify(goals));
+  }, [goals]);
+
   // Alert when timer expires
   useEffect(() => {
     if (remainingSeconds === 0 && activeTimerId !== null && !timerRunning) {
@@ -47,6 +63,19 @@ export default function App() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [remainingSeconds, timerRunning]);
+
+  function handleAddGoal(payload: Omit<Goal, "id">) {
+    goalsDispatch({ type: "ADD_GOAL", payload });
+  }
+
+  function handleEditGoal(id: number, title: string, dueDate?: string, notes?: string) {
+    goalsDispatch({ type: "EDIT_GOAL", id, title, dueDate, notes });
+  }
+
+  function handleDeleteGoal(id: number) {
+    dispatch({ type: "CLEAR_GOAL_LINK", goalId: id });
+    goalsDispatch({ type: "DELETE_GOAL", id });
+  }
 
   function handleToggleExpand(id: number) {
     setExpandedIds((prev) => {
@@ -82,7 +111,14 @@ export default function App() {
   return (
     <div className="app">
       <Header />
-      <AddTodoForm onAdd={(payload) => dispatch({ type: "ADD_TODO", payload })} />
+      <GoalsSection
+        goals={goals}
+        todos={todos}
+        onAddGoal={handleAddGoal}
+        onEditGoal={handleEditGoal}
+        onDeleteGoal={handleDeleteGoal}
+      />
+      <AddTodoForm goals={goals} onAdd={(payload) => dispatch({ type: "ADD_TODO", payload })} />
       <FilterBar filter={filter} onChange={setFilter} />
       <TodoList
         todos={todos}
@@ -106,6 +142,8 @@ export default function App() {
         onToggleSubtask={(todoId, subtaskId, checked) =>
           dispatch({ type: "TOGGLE_SUBTASK", todoId, subtaskId, checked })
         }
+        onSetGoalLink={(id, goalId) => dispatch({ type: "SET_GOAL_LINK", id, goalId })}
+        goals={goals}
       />
       <p className="footer">
         {remaining} task{remaining !== 1 ? "s" : ""} remaining

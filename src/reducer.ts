@@ -8,7 +8,9 @@ export type Action =
   | { type: "TOGGLE_SUBTASK"; todoId: number; subtaskId: number; checked: boolean }
   | { type: "EDIT_TODO"; id: number; text: string }
   | { type: "REORDER_TODO"; draggedId: number; targetId: number }
-  | { type: "EDIT_NOTE"; id: number; note: string };
+  | { type: "EDIT_NOTE"; id: number; note: string }
+  | { type: "CLEAR_GOAL_LINK"; goalId: number }
+  | { type: "SET_GOAL_LINK"; id: number; goalId: number | undefined };
 
 export function nextId(todos: Todo[]): number {
   return Math.max(0, ...todos.map((t) => t.id)) + 1;
@@ -93,6 +95,16 @@ export function todosReducer(todos: Todo[], action: Action): Todo[] {
       const note = action.note.trim() || undefined;
       return todos.map((t) => t.id === action.id ? { ...t, note } : t);
     }
+
+    case "CLEAR_GOAL_LINK":
+      return todos.map((t) =>
+        t.goalId === action.goalId ? { ...t, goalId: undefined } : t
+      );
+
+    case "SET_GOAL_LINK":
+      return todos.map((t) =>
+        t.id === action.id ? { ...t, goalId: action.goalId } : t
+      );
 
     default:
       return todos;

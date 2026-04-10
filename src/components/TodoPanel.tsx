@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { Todo } from "../types";
+import { Todo, Goal } from "../types";
 
 interface Props {
   todo: Todo;
+  goals: Goal[];
   onEditNote: (id: number, note: string) => void;
   onToggleSubtask: (todoId: number, subtaskId: number, checked: boolean) => void;
+  onSetGoalLink: (id: number, goalId: number | undefined) => void;
 }
 
-export default function TodoPanel({ todo, onEditNote, onToggleSubtask }: Props) {
+export default function TodoPanel({ todo, goals, onEditNote, onToggleSubtask, onSetGoalLink }: Props) {
   const [editingNote, setEditingNote] = useState(false);
   const [noteDraft, setNoteDraft] = useState(todo.note ?? "");
 
@@ -23,6 +25,18 @@ export default function TodoPanel({ todo, onEditNote, onToggleSubtask }: Props) 
 
   return (
     <div className="todo-panel">
+      {goals.length > 0 && (
+        <select
+          className="todo-goal-select"
+          value={todo.goalId ?? ""}
+          onChange={(e) => onSetGoalLink(todo.id, e.target.value === "" ? undefined : Number(e.target.value))}
+        >
+          <option value="">No goal</option>
+          {goals.map((g) => (
+            <option key={g.id} value={g.id}>{g.title}</option>
+          ))}
+        </select>
+      )}
       {editingNote ? (
         <textarea
           className="note-edit-input"

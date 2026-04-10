@@ -18,4 +18,12 @@ export interface Todo {
   recurrence?: Recurrence;
   note?: string;
   subtasks?: Subtask[];
+  goalId?: number;
+}
+
+export interface Goal {
+  id: number;
+  title: string;
+  dueDate?: string;
+  notes?: string;
 }
