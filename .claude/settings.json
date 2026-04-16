@@ -1,0 +1,19 @@
+{
+  "enabledPlugins": {
+    "github@claude-plugins-official": true
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Bash(git commit*)",
+            "command": "bash -c 'BRANCH=$(git branch --show-current); if [ \"$BRANCH\" = \"main\" ]; then echo \"ERROR: Do not commit directly to main. Create a feature branch first.\" && exit 1; fi'"
+          }
+        ]
+      }
+    ]
+  }
+}
